@@ -34,7 +34,9 @@ type AllProps = PropsFromState & PropsFromDispatch & RouteComponentProps<RoutePa
 class PostDetails extends Component<AllProps> {
 
   state = {
-    open: false
+    open: false,
+    formData: {
+    }
   }
 
   componentDidMount = () => {
@@ -56,18 +58,23 @@ class PostDetails extends Component<AllProps> {
     })
   };
 
-  handleUpdate = () => {
-    let newData = {
-      title: 'My updated post',
-      body: 'my updated content',
-      id: parseInt(this.props.match.params.id)
-    }
-    this.props.putRequestById(newData);
+  handleUpdate = (event: any) => {
+    event.preventDefault();
+    this.props.putRequestById(this.state.formData);
+  }
+
+  handleChange = (e: any) =>{
+    this.setState({
+      formData: {
+        id: parseInt(this.props.match.params.id),
+        [e.target.name]: e.target.value
+      }
+    });
   }
   
   componentDidUpdate(){
     // ideal place for displying notification
-    // and also you can auto close the modal if it is UX recommendation
+    // and also you can auto close the modal if it is UX recommendation    
   }
 
   render() {
@@ -94,39 +101,43 @@ class PostDetails extends Component<AllProps> {
                     Edit
                   </Button>
                   <Dialog open={this.state.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
-                    <DialogTitle id="form-dialog-title">Update</DialogTitle>
-                    <DialogContent>
-                      <DialogContentText>
-                        Edit the inputs and Click the button to update
-                      </DialogContentText>
-                      <TextField
-                        autoFocus
-                        margin="dense"
-                        id="title"
-                        label="Enter Post Title"
-                        type="text"
-                        defaultValue={this.props.post.title}
-                        fullWidth
-                      />
-                      <br/><br/>
-                      <TextField
-                        autoFocus
-                        margin="dense"
-                        id="body"
-                        label="Enter Post Content"
-                        type="text"
-                        defaultValue={this.props.post.body}
-                        fullWidth
-                      />
-                    </DialogContent>
-                    <DialogActions>
-                      <Button onClick={this.handleClose} color="primary">
-                        Cancel
-                      </Button>
-                      <Button onClick={this.handleUpdate} color="primary">
-                        Update
-                      </Button>
-                    </DialogActions>
+                    <form onSubmit={this.handleUpdate}>
+                      <DialogTitle id="form-dialog-title">Update</DialogTitle>
+                      <DialogContent>
+                        <DialogContentText>
+                          Edit the inputs and Click the button to update
+                        </DialogContentText>
+                        <TextField
+                          autoFocus
+                          margin="dense"
+                          name="title"
+                          label="Enter Post Title"
+                          type="text"
+                          defaultValue={this.props.post.title}
+                          onChange={this.handleChange}
+                          fullWidth
+                        />
+                        <br/><br/>
+                        <TextField
+                          autoFocus
+                          margin="dense"
+                          name="body"
+                          label="Enter Post Content"
+                          type="text"
+                          defaultValue={this.props.post.body}
+                          onChange={this.handleChange}
+                          fullWidth
+                        />
+                      </DialogContent>
+                      <DialogActions>
+                        <Button onClick={this.handleClose} color="primary">
+                          Cancel
+                        </Button>
+                        <Button type='submit' color="primary">
+                          Update
+                        </Button>
+                      </DialogActions>
+                    </form>
                   </Dialog>
                   <Button size="small" variant='outlined' color="secondary">
                     Delete
