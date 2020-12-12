@@ -796,67 +796,9 @@ Step 27:
     console.log(this.props);
     const { loading, post } = this.props;
 
-    
-
-    // for getting updated form data during submit 
-    //Refer https://ant.design/components/form/#components-form-demo-form-in-modal
-    // and  https://ant.design/components/modal/
-
     return (
       <div>
-        <Title level={2}>View Post Details</Title>
-        { post?
-            <Card title={post.title} style={{ width: '100%' }}>
-              <p>{post.body}</p>
-              
-              <Button type="primary" onClick={this.showModal}>Edit</Button> <Button danger>Delete</Button>
-              <Modal
-                title="Basic Modal"
-                visible={this.state.visible}
-                footer={[
-                  <Button key="back" onClick={this.handleCancel}>
-                    Cancel
-                  </Button>,
-                  <Button form="myForm" type="primary" key="submit" htmlType="submit">
-                    Update
-                  </Button>
-
-                ]}
-              >
-                <Form
-                  id='myForm'
-                  initialValues={{
-                    'title': post.title,
-                    'body': post.body
-                  }}
-                  {...layout}
-                  name="basic"
-                  onFinish={this.onFinish}
-                  onFinishFailed={this.onFinishFailed}
-              >
-                <Form.Item
-                  label="Post Title"
-                  name="title"                  
-                  rules={[{ required: true, message: 'Please input your postTitle!' }]}
-                >
-                  <Input/>
-                </Form.Item>
-
-                <Form.Item
-                  label="Post Body"
-                  name="body"
-                  rules={[{ required: true, message: 'Please input your postContent!' }]}
-                >
-                  <Input.TextArea />
-                </Form.Item>
-
-                
-              </Form>
-              </Modal>
-            </Card>
-          :
-          <Spin size="large" />
-        }
+        
         
       </div>
     )

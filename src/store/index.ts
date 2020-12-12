@@ -17,7 +17,7 @@ export interface ApplicationState {
 // the reducer acts on the corresponding ApplicationState property type.
 export const createRootReducer = (history: History) =>{
   return combineReducers({
-    posts: postsReducer,   
+    posts: postsReducer,
     router: connectRouter(history)
   })
 }
@@ -27,7 +27,8 @@ export const createRootReducer = (history: History) =>{
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*
 export function* rootSaga() {
   yield all(
-    [fork(postsSaga),
+    [
+      fork(postsSaga)
     // another feature's saga will come here
   ])
 }
