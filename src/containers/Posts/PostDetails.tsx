@@ -6,10 +6,42 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-class PostDetails extends Component {
+import { fetchRequestById, updateRequestById } from '../../store/posts/actions';
+import { RouteComponentProps } from 'react-router-dom';
+import { ApplicationState } from '../../store';
+import { connect } from 'react-redux';
+
+// Separate state props + dispatch props to their own interfaces.
+interface PropsFromState {
+  loading: boolean
+  post: any
+  errors?: string,
+  status?: boolean
+}
+
+interface PropsFromDispatch {
+  getPostById: typeof fetchRequestById
+  putRequestById: typeof updateRequestById
+}
+
+interface RouteParams {
+  id: string
+}
+
+// Combine both state + dispatch props - as well as any props we want to pass - in a union type.
+type AllProps = PropsFromState & PropsFromDispatch & RouteComponentProps<RouteParams>
+
+class PostDetails extends Component<AllProps> {
 
   state = {
     open: false
+  }
+
+  componentDidMount = () => {
+    // Send req to get the postById 
+
+    const { match, getPostById } = this.props;
+    getPostById(match.params.id);
   }
 
   handleClickOpen = () => {
@@ -24,7 +56,22 @@ class PostDetails extends Component {
     })
   };
 
+  handleUpdate = () => {
+    let newData = {
+      title: 'My updated post',
+      body: 'my updated content',
+      id: parseInt(this.props.match.params.id)
+    }
+    this.props.putRequestById(newData);
+  }
+  
+  componentDidUpdate(){
+    // ideal place for displying notification
+    // and also you can auto close the modal if it is UX recommendation
+  }
+
   render() {
+
     return (
       <Container>
         <Grid container spacing={3}>
@@ -35,10 +82,10 @@ class PostDetails extends Component {
                 <CardActionArea>
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
-                      Post No 1
+                     #{this.props.post.id}. {this.props.post.title}
                     </Typography>
                     <Typography variant="body2" color="textSecondary" component="p">
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                    {this.props.post.body}
                     </Typography>
                   </CardContent>
                 </CardActionArea>
@@ -55,18 +102,20 @@ class PostDetails extends Component {
                       <TextField
                         autoFocus
                         margin="dense"
-                        id="name"
+                        id="title"
                         label="Enter Post Title"
                         type="text"
+                        defaultValue={this.props.post.title}
                         fullWidth
                       />
                       <br/><br/>
                       <TextField
                         autoFocus
                         margin="dense"
-                        id="name"
+                        id="body"
                         label="Enter Post Content"
                         type="text"
+                        defaultValue={this.props.post.body}
                         fullWidth
                       />
                     </DialogContent>
@@ -74,7 +123,7 @@ class PostDetails extends Component {
                       <Button onClick={this.handleClose} color="primary">
                         Cancel
                       </Button>
-                      <Button onClick={this.handleClose} color="primary">
+                      <Button onClick={this.handleUpdate} color="primary">
                         Update
                       </Button>
                     </DialogActions>
@@ -92,4 +141,28 @@ class PostDetails extends Component {
   }
 }
 
-export default PostDetails;
+// It's usually good practice to only include one context at a time in a connected component.
+// Although if necessary, you can always include multiple contexts. Just make sure to
+// separate them from each other to prevent prop conflicts.
+const mapStateToProps = ({ posts }: ApplicationState) => {
+  console.log(posts);
+  return{
+    post: posts.post,
+    errors: posts.errors,
+    status: posts.status
+  }
+}
+
+// mapDispatchToProps is especially useful for constraining our actions to the connected component.
+// You can access these via `this.props`.
+const mapDispatchToProps: PropsFromDispatch = {
+  getPostById: fetchRequestById,
+  putRequestById: updateRequestById
+}
+
+// Now let's connect our component!
+// With redux v4's improved typings, we can finally omit generics here.
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PostDetails); 

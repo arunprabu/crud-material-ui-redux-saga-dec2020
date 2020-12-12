@@ -17,7 +17,8 @@ function App() {
         <Switch>
           <Route path='/' component={Home} exact/>
           <Route path='/posts' component={Posts} exact/>
-          <Route path='/posts/1' component={PostDetails}/>
+          {/*  :id is the URL Param */}
+          <Route path='/posts/:id' component={PostDetails}/> 
         </Switch>
 
         <Footer />

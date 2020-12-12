@@ -12,6 +12,7 @@ import { Post } from '../../store/posts/types';
 import { fetchRequest } from '../../store/posts/actions';
 import { connect } from 'react-redux';
 import { CircularProgress } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 // Separate state props + dispatch props to their own interfaces.
 interface PropsFromState {
@@ -56,9 +57,11 @@ class PostList extends Component<AllProps> {
               </CardContent>
             </CardActionArea>
             <CardActions>
-              <Button size="small" color="primary">
-                Learn More
-              </Button>
+              <Link to={`/posts/${post.id}`}>
+                <Button size="small" color="primary">
+                  Learn More
+                </Button>
+              </Link> 
             </CardActions>
           </Card>
         )

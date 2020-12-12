@@ -35,6 +35,7 @@ export enum PostsActionTypes {
 export interface PostsState {
   readonly loading: boolean
   readonly postList: []
+  readonly post: {}
   readonly errors?: string,
   readonly status?: boolean
 }

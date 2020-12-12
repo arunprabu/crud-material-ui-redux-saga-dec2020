@@ -14,9 +14,8 @@ const initialState = window.INITIAL_REDUX_STATE
 const store = configureStore(history, initialState);
 
 ReactDOM.render(
-  <React.StrictMode>
     <Main store={store} history={history} />
-  </React.StrictMode>,
+  ,
   document.getElementById('root')
 );
 
