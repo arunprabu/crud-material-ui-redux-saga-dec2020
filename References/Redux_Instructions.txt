@@ -1014,7 +1014,6 @@ Step 36:
         return { 
               ...state, loading: false, 
               postList: [...state.postList, action.payload ], 
-              post: action.payload 
         }
 
 
